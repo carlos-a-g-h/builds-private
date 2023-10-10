@@ -22,11 +22,6 @@ jobs:
           path: source-code
           sparse-checkout: .
 
-#      - name: Setup Python
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: "3.9.6"
-
       - name: Show repo contents / structure
         run: |
           find source-code
