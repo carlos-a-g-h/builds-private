@@ -11,10 +11,10 @@ on:
         required: true
 
 jobs:
-  build-linux:
+  show-contents:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: ${{ inputs.THE_REPO }}
           path: source-code 
@@ -24,6 +24,6 @@ jobs:
 #        with:
 #          python-version: "3.9.6"
 
-      - name: Show content
+      - name: Show repo contents / structure
         run: |
           find source-code
