@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Show contents
+
+on:
+  workflow_dispatch:
+    inputs:
+      THE_REPO:
+        description: Repository name
+        type: string
+        required: true
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.THE_REPO }}
+          path: source-code 
+
+#      - name: Setup Python
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: "3.9.6"
+
+      - name: Show content
+        run: |
+          find source-code
