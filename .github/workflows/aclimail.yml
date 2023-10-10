@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Show contents
+
+on:
+  workflow_dispatch:
+    inputs:
+      THE_REPO:
+        description: Repository name
+        type: string
+        required: true
+
+env:
+  RNOW: ""
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.THE_REPO }}
+          ref: main
+          token: ${{ secrets.GH_TOKEN }}
+          path: source-code
+          sparse-checkout: .
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9.6"
