@@ -17,7 +17,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: ${{ inputs.THE_REPO }}
-          path: source-code 
+          ref: main
+          token: ${{ secrets.GH_TOKEN }}
+          path: source-code
+          sparse-checkout: .
 
 #      - name: Setup Python
 #        uses: actions/setup-python@v3
