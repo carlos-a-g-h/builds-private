@@ -57,24 +57,23 @@ jobs:
         run: pip install -r req.txt
 
       - name: Setup Python (install Nuitka)
-        working-directory: source-code
-        run: pip install nuitka
+        run: |
+          pip install nuitka
+          mkdir out
 
       - name: Create a Linux binary
         if: ${{ contains(matrix.os,'windows') == false }}
         working-directory: source-code
         run: |
-          mkdir -v ../dist/
-          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "${{ inputs.STEM }}.${{ matrix.os }}"
-          mv -v "${{ inputs.STEM }}.${{ matrix.os }}" "./dist/${{ inputs.STEM }}.${{ matrix.os }}"
+          python -m nuitka --verbose --onefile "${{ inputs.MAIN_PY }}" --output-dir ../out/ --output-filename "${{ inputs.STEM }}.${{ matrix.os }}"
+          mv -v "${{ inputs.STEM }}.${{ matrix.os }}" "../out/${{ inputs.STEM }}.${{ matrix.os }}"
 
       - name: Create a Windows executable
         if: ${{ contains(matrix.os,'windows') == true }}
         working-directory: source-code
         run: |
-          mkdir ../dist/
-          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "${{ inputs.STEM }}.${{ matrix.os }}.exe"
-          mv "${{ inputs.STEM }}.${{ matrix.os }}.exe" "./dist/${{ inputs.STEM }}.${{ matrix.os }}.exe"
+          python -m nuitka --verbose --onefile "${{ inputs.MAIN_PY }}" --output-dir ../out/ --output-filename "${{ inputs.STEM }}.${{ matrix.os }}.exe"
+          mv "${{ inputs.STEM }}.${{ matrix.os }}.exe" "../out/${{ inputs.STEM }}.${{ matrix.os }}.exe"
 
       - uses: actions/upload-artifact@v3
         with:
