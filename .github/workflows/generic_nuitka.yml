@@ -1,0 +1,77 @@
+name: (Generic) Nuitka
+
+on:
+  workflow_dispatch:
+    inputs:
+      REPO:
+        description: Repository name
+        type: string
+        required: true
+
+      MAIN_PY:
+        description: Python main filename
+        type: string
+        required: true
+        default: main.py
+
+      STEM:
+        description: Project stem (short name)
+        type: string
+        required: true
+
+      NO_WINDOWS:
+        description: No Windows EXE
+        type: boolean
+        required: true
+        default: false
+
+jobs:
+  build-binaries:
+    name: Build blobs
+    strategy:
+      matrix:
+        os: [ubuntu-20.04,windows-2019 ]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check if cannot run on Windows
+        if ${{ runner.os == "Windows" && inputs.NO_WINDOWS == true }}
+        run: exit 1
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.REPO }}
+          ref: main
+          token: ${{ secrets.GH_TOKEN }}
+          path: source-code
+          sparse-checkout: .
+
+      - name: Setup Python (1)
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9.6"
+
+      - name: Setup Python (2)
+        working-directory: source-code
+        run: |
+          pip install -r reqs.txt
+          pip install nuitka
+
+      - name: Create a Linux binary
+        if ${{ runner.os == Linux }}
+        working-directory: source-code
+        run: |
+          mkdir ../dist/
+          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "../dist/${{ inputs.STEM }}.${{ matrix.os }}"
+
+      - name: Create a Windows executable
+        if ${{ runner.os == Windows }}
+        working-directory: source-code
+        run: |
+          mkdir ../dist/
+          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "../dist/${{ inputs.STEM }}.${{ matrix.os }}.exe"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "${{ inputs.STEM }}-${{ matrix.os }}"
+          path: ./dist/${{ inputs.STEM }}.*
