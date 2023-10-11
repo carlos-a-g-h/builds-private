@@ -125,12 +125,12 @@ jobs:
 
       - name: Set name (Linux):
         if: ${{ contains(matrix.binary,'windows') == false }}
-        run:|
+        run: |
           echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
 
       - name: Set name (Windows):
         if: ${{ contains(matrix.binary,'windows') == true }}
-        run:|
+        run: |
           echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
 
       - name: Download artifact (Linux)
