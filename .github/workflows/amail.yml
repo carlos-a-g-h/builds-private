@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: AMail
 
 on:
@@ -10,12 +8,12 @@ on:
         type: string
         required: true
 
-env:
-  RNOW: ""
-
 jobs:
-  build-linux:
-    runs-on: ubuntu-22.04
+  build-binaries:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04,windows-2019 ]
+    runs-on: martix.os
     steps:
       - uses: actions/checkout@v4
         with:
