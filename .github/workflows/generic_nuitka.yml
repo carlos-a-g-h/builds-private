@@ -46,22 +46,24 @@ jobs:
           path: source-code
           sparse-checkout: .
 
-      - name: Setup Python (1)
+      - name: Setup Python
         uses: actions/setup-python@v3
         with:
           python-version: "3.9.6"
 
-      - name: Setup Python (2)
+      - name: Setup Python (req.txt)
+        if: ${{ hashFiles('req.txt') != '' }}
+        run: pip install -r req.txt
+
+      - name: Setup Python (install Nuitka)
         working-directory: source-code
-        run: |
-          pip install -r reqs.txt
-          pip install nuitka
+        run: pip install nuitka
 
       - name: Create a Linux binary
         if: ${{ runner.os == Linux }}
         working-directory: source-code
         run: |
-          mkdir ../dist/
+          mkdir -v ../dist/
           python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "../dist/${{ inputs.STEM }}.${{ matrix.os }}"
 
       - name: Create a Windows executable
