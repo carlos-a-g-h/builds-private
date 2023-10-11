@@ -35,7 +35,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check if on Windows
-        if: ${{ runner.os == Windows && inputs.NO_WINDOWS == true }}
+        if: ${{ runner.os == "Windows" && inputs.NO_WINDOWS == true }}
         run: exit 1
 
       - uses: actions/checkout@v4
@@ -61,14 +61,14 @@ jobs:
         run: pip install nuitka
 
       - name: Create a Linux binary
-        if: ${{ runner.os == Linux }}
+        if: ${{ runner.os == "Linux" }}
         working-directory: source-code
         run: |
           mkdir -v ../dist/
           python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "../dist/${{ inputs.STEM }}.${{ matrix.os }}"
 
       - name: Create a Windows executable
-        if: ${{ runner.os == Windows }}
+        if: ${{ runner.os == "Windows" }}
         working-directory: source-code
         run: |
           mkdir ../dist/
