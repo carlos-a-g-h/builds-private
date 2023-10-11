@@ -61,7 +61,7 @@ jobs:
         if: ${{ contains(matrix.os,'windows') == false }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}"
+          python -m nuitka --onefile --onefile-no-compression --assume-yes-for-downloads "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}"
           mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}"
           find the-output
 
@@ -69,7 +69,7 @@ jobs:
         if: ${{ contains(matrix.os,'windows') == true }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.exe"
+          python -m nuitka --onefile --onefile-no-compression --assume-yes-for-downloads "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.exe"
           mv "the-output/${{ inputs.THE_NAME }}.exe" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe"
           ls
 
