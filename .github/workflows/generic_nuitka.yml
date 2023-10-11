@@ -53,6 +53,7 @@ jobs:
 
       - name: Setup Python (req.txt)
         if: ${{ hashFiles('req.txt') != '' }}
+        working-directory: source-code
         run: pip install -r req.txt
 
       - name: Setup Python (install Nuitka)
