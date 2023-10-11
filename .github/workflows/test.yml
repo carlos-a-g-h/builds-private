@@ -1,0 +1,84 @@
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Build and upload executable binary
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, ubuntu-20.04, windows-2019 ]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if on Windows
+        run: |
+          dd if=/dev/zero of="${{ matrix.os }}.test"
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "${{ matrix.os }}"
+          if-no-files-found: error
+          path: |
+            "${{ matrix.os }}.test"
+
+  job2:
+    name: Create the release
+    needs: job1
+
+    runs-on: ubuntu-latest
+    outputs:
+      the_upload_url: ${{ steps.CreateRelease.outputs.upload_url }}
+
+    steps:
+
+    - name: Get date and time
+      run: |
+        RIGHT_NOW=$(date +%Y-%m-%d-%H-%M-%S)
+        echo "Today is: $RIGHT_NOW"
+        echo "TODAY=$RIGHT_NOW >> $GITHUB_ENV"
+
+    - name: Create release
+      id: CreateRelease
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        tag_name: "$TODAY"
+        release_name: "$TODAY"
+        draft: false
+        prerelease: false
+
+  job3:
+    name: Attach artifact as an asset
+    needs: job2
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        binary: [ ubuntu-latest, ubuntu-20.04, windows-2019 ]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set name
+        run: |
+          echo "THE_FILENAME=${{ matrix.binary }}.bin >> $GITHUB_ENV"
+
+      - name: Download artifact (Linux)
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.binary }}
+          path: "$THE_FILENAME"
+
+      - name: Attach the artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+        with:
+          upload_url: ${{ needs.job2.the_upload_url }}
+          asset_path: "$THE_FILENAME"
+          asset_name: "$THE_FILENAME"
+          asset_content_type: application/octet-stream
+
