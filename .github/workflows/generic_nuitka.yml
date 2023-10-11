@@ -15,17 +15,20 @@ on:
         default: main.py
 
       NO_WINDOWS:
-        description: No Windows EXE
+        description: Do not build for Windows, just Linux
         type: boolean
         required: true
         default: false
 
+env:
+  PLATFORMS: [ubuntu-20.04,windows-2019 ]
+
 jobs:
-  build-binaries:
+  job1:
     name: Build and upload executable binary
     strategy:
       matrix:
-        os: [ubuntu-20.04,windows-2019 ]
+        os: ${{ env.PLATFORMS }}
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -80,3 +83,70 @@ jobs:
           path: |
             ./source-code/the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}
             ./source-code/the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe
+
+  job2:
+    name: Create the release
+    needs: job1
+
+    runs-on: ubuntu-latest
+    outputs:
+      the_upload_url: ${{ steps.CreateRelease.outputs.upload_url }}
+
+    steps:
+
+    - name: Get date and time
+      run: |
+        RIGHT_NOW=$(date +%Y-%m-%d-%H-%M-%S)
+        echo "Today is: $RIGHT_NOW"
+        echo "TODAY=$RIGHT_NOW >> $GITHUB_ENV"
+
+    - name: Create release
+      id: CreateRelease
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        tag_name: "$TODAY"
+        release_name: "$TODAY"
+        draft: false
+        prerelease: false
+
+  job3:
+    name: Attach artifact as an asset
+    needs: job2
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        binary: ${{ env.PLATFORMS }}
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Set name (Linux):
+        if: ${{ contains(matrix.binary,'windows') == false }}
+        run:|
+          echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
+
+      - name: Set name (Windows):
+        if: ${{ contains(matrix.binary,'windows') == true }}
+        run:|
+          echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
+
+      - name: Download artifact (Linux)
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.binary }}
+          path: "$THE_FILENAME"
+
+      - name: Attach the artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+        with:
+          upload_url: ${{ needs.job2.the_upload_url }}
+          asset_path: "$THE_FILENAME"
+          asset_name: "$THE_FILENAME"
+          asset_content_type: application/octet-stream
+
