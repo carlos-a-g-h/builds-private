@@ -54,28 +54,29 @@ jobs:
       - name: Setup Python (req.txt)
         if: ${{ hashFiles('req.txt') != '' }}
         working-directory: source-code
-        run: pip install -r req.txt
+        run: |
+          pip install -r req.txt
+          mkdir out
 
       - name: Setup Python (install Nuitka)
         run: |
           pip install nuitka
-          mkdir out
 
       - name: Create a Linux binary
         if: ${{ contains(matrix.os,'windows') == false }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" --output-dir==../out/ --output-filename=="${{ inputs.STEM }}.${{ matrix.os }}"
-          find ../out
+          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" --output-dir=="the-output" --output-filename=="${{ inputs.STEM }}.${{ matrix.os }}"
+          find the-output
 
       - name: Create a Windows executable
         if: ${{ contains(matrix.os,'windows') == true }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" --output-dir==../out/ --output-filename=="${{ inputs.STEM }}.${{ matrix.os }}.exe"
-          ls ../out
+          python -m nuitka --onefile "${{ inputs.MAIN_PY }}" --output-dir=="the-output" --output-filename=="${{ inputs.STEM }}.${{ matrix.os }}.exe"
+          ls the-output
 
       - uses: actions/upload-artifact@v3
         with:
           name: "${{ inputs.STEM }}-${{ matrix.os }}"
-          path: ./out/${{ inputs.STEM }}.*
+          path: ./source-code/the-output/${{ inputs.STEM }}.*
