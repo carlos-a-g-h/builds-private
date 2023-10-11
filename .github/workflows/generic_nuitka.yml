@@ -3,8 +3,8 @@ name: (Generic) Nuitka
 on:
   workflow_dispatch:
     inputs:
-      REPO:
-        description: Repository name
+      THE_NAME:
+        description: Repository name (without your username)
         type: string
         required: true
 
@@ -13,11 +13,6 @@ on:
         type: string
         required: true
         default: main.py
-
-      STEM:
-        description: Project stem (short name)
-        type: string
-        required: true
 
       NO_WINDOWS:
         description: No Windows EXE
@@ -40,7 +35,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.REPO }}
+          repository: "${{ github.repository_owner }}/${{ inputs.THE_NAME }}"
           ref: main
           token: ${{ secrets.GH_TOKEN }}
           path: source-code
@@ -66,17 +61,17 @@ jobs:
         if: ${{ contains(matrix.os,'windows') == false }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.STEM }}.${{ matrix.os }}"
+          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.${{ matrix.os }}"
           find the-output
 
       - name: Create a Windows executable
         if: ${{ contains(matrix.os,'windows') == true }}
         working-directory: source-code
         run: |
-          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.STEM }}.${{ matrix.os }}.exe"
+          python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.${{ matrix.os }}.exe"
           ls the-output
 
       - uses: actions/upload-artifact@v3
         with:
           name: "${{ inputs.STEM }}-${{ matrix.os }}"
-          path: ./source-code/the-output/${{ inputs.STEM }}.*
+          path: ./source-code/the-output/${{ inputs.THE_NAME }}.*
