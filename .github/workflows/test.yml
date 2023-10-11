@@ -12,9 +12,9 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Check if on Windows
+      - name: Create a random blob
         run: |
-          dd if=/dev/zero of="${{ matrix.os }}.test"
+          dd if=/dev/zero of="${{ matrix.os }}.test" bs=1024 count=12345
 
       - uses: actions/upload-artifact@v3
         with:
