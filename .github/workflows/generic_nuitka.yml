@@ -66,6 +66,7 @@ jobs:
         run: |
           mkdir -v ../dist/
           python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "${{ inputs.STEM }}.${{ matrix.os }}"
+          mv -v "${{ inputs.STEM }}.${{ matrix.os }}" "./dist/${{ inputs.STEM }}.${{ matrix.os }}"
 
       - name: Create a Windows executable
         if: ${{ contains(matrix.os,'windows') == true }}
@@ -73,6 +74,7 @@ jobs:
         run: |
           mkdir ../dist/
           python -m nuitka --onefile "${{ inputs.MAIN_PY }}" -o "${{ inputs.STEM }}.${{ matrix.os }}.exe"
+          mv "${{ inputs.STEM }}.${{ matrix.os }}.exe" "./dist/${{ inputs.STEM }}.${{ matrix.os }}.exe"
 
       - uses: actions/upload-artifact@v3
         with:
