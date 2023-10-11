@@ -27,7 +27,7 @@ on:
 
 jobs:
   build-binaries:
-    name: Build blobs
+    name: Build binary/executable
     strategy:
       matrix:
         os: [ubuntu-20.04,windows-2019 ]
