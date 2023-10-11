@@ -123,12 +123,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set name (Linux):
+      - name: Set name (Linux)
         if: ${{ contains(matrix.binary,'windows') == false }}
         run: |
           echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
 
-      - name: Set name (Windows):
+      - name: Set name (Windows)
         if: ${{ contains(matrix.binary,'windows') == true }}
         run: |
           echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
