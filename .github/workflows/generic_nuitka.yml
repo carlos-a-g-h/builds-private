@@ -62,7 +62,7 @@ jobs:
         working-directory: source-code
         run: |
           python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}"
-          mv -v "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}"
+          mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}"
           find the-output
 
       - name: Create a Windows executable
@@ -70,7 +70,7 @@ jobs:
         working-directory: source-code
         run: |
           python -m nuitka --onefile --onefile-no-compression "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.exe"
-          mv -v "the-output/${{ inputs.THE_NAME }}.exe" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe"
+          mv "the-output/${{ inputs.THE_NAME }}.exe" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe"
           ls
 
       - uses: actions/upload-artifact@v3
