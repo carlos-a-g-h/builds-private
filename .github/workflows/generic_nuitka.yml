@@ -20,15 +20,12 @@ on:
         required: true
         default: false
 
-env:
-  PLATFORMS: [ubuntu-20.04,windows-2019 ]
-
 jobs:
   job1:
     name: Build and upload executable binary
     strategy:
       matrix:
-        os: ${{ env.PLATFORMS }}
+        os: [ubuntu-20.04,windows-2019 ]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -118,7 +115,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        binary: ${{ env.PLATFORMS }}
+        binary: [ubuntu-20.04,windows-2019 ]
 
     runs-on: ubuntu-latest
     steps:
