@@ -91,10 +91,7 @@ jobs:
     steps:
       - name: Get date and time
         id: DateToday
-        run: |
-          RIGHT_NOW=$(date +%Y-%m-%d-%H-%M-%S)
-          echo "Today is: $RIGHT_NOW"
-          echo "TODAY=$RIGHT_NOW >> $GITHUB_OUTPUT"
+        run: echo "TODAY=$(date +%Y-%m-%d-%H-%M-%S) >> $GITHUB_OUTPUT"
 
   job3:
     name: Create the release
