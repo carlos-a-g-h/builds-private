@@ -102,6 +102,9 @@ jobs:
       the_upload_url: ${{ steps.CreateRelease.outputs.upload_url }}
 
     steps:
+    - name: Test prev job output
+      run: echo "${{ needs.job2.outputs.the_date }}"
+
     - name: Create release
       id: CreateRelease
       uses: actions/create-release@v1
