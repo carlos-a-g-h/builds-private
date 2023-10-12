@@ -92,10 +92,11 @@ jobs:
     steps:
 
     - name: Get date and time
+      id: DateToday
       run: |
         RIGHT_NOW=$(date +%Y-%m-%d-%H-%M-%S)
         echo "Today is: $RIGHT_NOW"
-        echo "TODAY=$RIGHT_NOW >> $GITHUB_ENV"
+        echo "TODAY=$RIGHT_NOW >> $GITHUB_OUTPUT"
 
     - name: Create release
       id: CreateRelease
@@ -103,8 +104,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: "$TODAY"
-        release_name: "$TODAY"
+        tag_name: ${{ steps.DateToday.outputs.TODAY }}
+        release_name: ${{ steps.DateToday.outputs.TODAY }}
         draft: false
         prerelease: false
 
