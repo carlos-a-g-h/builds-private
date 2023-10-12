@@ -110,8 +110,8 @@ jobs:
       with:
         # tag_name: ${{ steps.DateToday.outputs.TODAY }}
         # release_name: ${{ steps.DateToday.outputs.TODAY }}
-        tag_name: ${{ needs.job2.the_date }}
-        release_name: ${{ needs.job2.the_date }}
+        tag_name: ${{ needs.job2.outputs.the_date }}
+        release_name: ${{ needs.job2.outputs.the_date }}
         draft: false
         prerelease: false
 
