@@ -20,8 +20,7 @@ jobs:
         with:
           name: "${{ matrix.os }}"
           if-no-files-found: error
-          path: |
-            "${{ matrix.os }}.test"
+          path: "${{ matrix.os }}.test"
 
   job2:
     name: Create the release
