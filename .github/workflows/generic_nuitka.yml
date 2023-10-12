@@ -82,28 +82,22 @@ jobs:
             ./source-code/the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe
 
   job2:
-    name: Get date of today
-    needs: job1
-    runs-on: ubuntu-latest
-    outputs:
-      the_date: ${{ steps.DateToday.outputs.TODAY }}
-
-    steps:
-      - name: Get date and time
-        id: DateToday
-        run: echo "TODAY=$(date +%Y-%m-%d-%H-%M-%S) >> $GITHUB_OUTPUT"
-
-  job3:
     name: Create the release
-    needs: job2
+    needs: job1
 
     runs-on: ubuntu-latest
     outputs:
       the_upload_url: ${{ steps.CreateRelease.outputs.upload_url }}
 
     steps:
-    - name: Test prev job output
-      run: echo "${{ needs.job2.outputs.the_date }}"
+    - name: Get date
+      uses: StarUbiquitous/command-output@v1.0.0
+      id: today
+      with:
+        run: date +%Y-%m-%d-%H-%M-%S
+
+    - name: Display date
+      run: echo "Today is ${{ steps.today.outputs.stdout }}"
 
     - name: Create release
       id: CreateRelease
@@ -111,16 +105,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        # tag_name: ${{ steps.DateToday.outputs.TODAY }}
-        # release_name: ${{ steps.DateToday.outputs.TODAY }}
-        tag_name: ${{ needs.job2.outputs.the_date }}
-        release_name: ${{ needs.job2.outputs.the_date }}
+        tag_name: "${{ steps.today.outputs.stdout }}"
+        release_name: "${{ steps.today.outputs.stdout }}"
         draft: false
         prerelease: false
 
-  job4:
+  job3:
     name: Attach artifact as an asset
-    needs: job3
+    needs: job2
 
     strategy:
       max-parallel: 1
@@ -152,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
         with:
-          upload_url: ${{ needs.job3.the_upload_url }}
+          upload_url: ${{ needs.job2.the_upload_url }}
           asset_path: "$THE_FILENAME"
           asset_name: "$THE_FILENAME"
           asset_content_type: application/octet-stream
