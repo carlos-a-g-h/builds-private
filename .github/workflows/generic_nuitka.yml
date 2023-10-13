@@ -92,7 +92,7 @@ jobs:
     steps:
     - name: Get date
       uses: StarUbiquitous/command-output@v1.0.0
-      id: today
+      id: Today
       with:
         run: date +%Y-%m-%d-%H-%M-%S
 
@@ -105,8 +105,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: "${{ steps.today.outputs.stdout }}"
-        release_name: "${{ steps.today.outputs.stdout }}"
+        tag_name: "${{ steps.Today.outputs.stdout }}"
+        release_name: "${{ steps.Today.outputs.stdout }}"
         draft: false
         prerelease: false
 
@@ -122,21 +122,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set name (Linux)
-        if: ${{ contains(matrix.binary,'windows') == false }}
-        run: |
-          echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
+      #- name: Set name (Linux)
+      #  if: ${{ contains(matrix.binary,'windows') == false }}
+      #  run: |
+      #    echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
 
-      - name: Set name (Windows)
-        if: ${{ contains(matrix.binary,'windows') == true }}
-        run: |
-          echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
+      #- name: Set name (Windows)
+      #  if: ${{ contains(matrix.binary,'windows') == true }}
+      #  run: |
+      #    echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
+
+      - name: Set Name
+        id: BlobName
+        uses: StarUbiquitous/command-output@v1.0.0
+        with:
+          run: |
+            printf "${{ matrix.binary }}"|grep "windows">/dev/null
+            if [ $? -eq 0 ]; then
+            	printf "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe"
+            else
+            	printf "${{ inputs.THE_NAME }}.${{ matrix.binary }}"
+            fi
 
       - name: Download artifact (Linux)
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.binary }}
-          path: "$THE_FILENAME"
+          path: ${{ steps.BlobName.outputs.stdout }}
 
       - name: Attach the artifact
         uses: actions/upload-release-asset@v1
