@@ -156,7 +156,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
         with:
-          upload_url: ${{ needs.job2.the_upload_url }}
+          upload_url: ${{ needs.job2.outputs.the_upload_url }}
           asset_path: "$THE_FILENAME"
           asset_name: "$THE_FILENAME"
           asset_content_type: application/octet-stream
