@@ -137,11 +137,11 @@ jobs:
         uses: StarUbiquitous/command-output@v1.0.0
         with:
           run: |
-            printf "${{ matrix.binary }}"|grep "windows">/dev/null
-            if [ $? -eq 0 ]; then
-            	printf "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe"
+            CHARS=$(printf ${{ matrix.binary }}|grep "windows|wc -c")
+            if [ $CHARS -eq 0 ]; then
+            	echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}" >> "$GITHUB_OUTPUT"
             else
-            	printf "${{ inputs.THE_NAME }}.${{ matrix.binary }}"
+            	echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe" >> "$GITHUB_OUTPUT"
             fi
 
       - name: Download artifact (Linux)
