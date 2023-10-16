@@ -91,13 +91,9 @@ jobs:
 
     steps:
     - name: Get date
-      #uses: StarUbiquitous/command-output@v1.0.0
-      #id: Today
-      #with:
-      #  run: date +%Y-%m-%d-%H-%M-%S
-      id: Today
+      id: tag_naming
       run: |
-        echo "$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
+        echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: Display date
       run: echo "Today is ${{ steps.today.outputs.stdout }}"
@@ -109,7 +105,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         tag_name: "${{ steps.Today.outputs.stdout }}"
-        release_name: "${{ steps.Today.outputs.stdout }}"
+        release_name: "${{ steps.tag_naming.outputs.the_tag_name }}"
         draft: false
         prerelease: false
 
@@ -127,21 +123,21 @@ jobs:
     steps:
 
       - name: Set Name
-        id: BlobName
+        id: file_naming
         run: |
+          tmp_var="${{ inputs.THE_NAME }}.${{ matrix.binary }}"
           CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
-          if [ $CHARS -eq 0 ]; then
-            echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe" >> "$GITHUB_OUTPUT"
+          if [ $CHARS -gt 0 ]
+          then
+            tmp_var="$tmp_var".exe
           fi
-          echo "FileName=$TheName" >> "$GITHUB_OUTPUT"
+          echo "the_asset_name=$tmp_var" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact (Linux)
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.binary }}
-          path: ${{ steps.BlobName.outputs.stdout }}
+          path: ${{ steps.file_naming.outputs.asset_name_var }}
 
       - name: Attach the artifact
         uses: actions/upload-release-asset@v1
