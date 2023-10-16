@@ -135,6 +135,7 @@ jobs:
           else
             echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe" >> "$GITHUB_OUTPUT"
           fi
+          echo "FileName=$TheName" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact (Linux)
         uses: actions/download-artifact@v3
@@ -149,7 +150,7 @@ jobs:
 
         with:
           upload_url: ${{ needs.job2.outputs.the_upload_url }}
-          asset_path: "$THE_FILENAME"
+          asset_path: "${{ steps. }}"
           asset_name: "$THE_FILENAME"
           asset_content_type: application/octet-stream
 
