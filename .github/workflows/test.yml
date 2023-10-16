@@ -19,8 +19,6 @@ jobs:
         run: |
           echo "test from step 1 (step) = ${{ steps.step1.outputs.test }}"
           echo "test from step 2 (step) = ${{ steps.step2.outputs.test }}"
-          echo "test from step 1 (job out) = ${{ jobs.job1.outputs.output1 }}"
-          echo "test from step 2 (job out) = ${{ jobs.job1.outputs.output2 }}"
 
   job2:
     runs-on: ubuntu-latest
