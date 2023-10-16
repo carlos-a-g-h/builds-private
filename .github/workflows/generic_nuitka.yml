@@ -120,24 +120,15 @@ jobs:
         binary: [ubuntu-20.04,windows-2019 ]
 
     runs-on: ubuntu-latest
+
     steps:
-
-      #- name: Set name (Linux)
-      #  if: ${{ contains(matrix.binary,'windows') == false }}
-      #  run: |
-      #    echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }} >> $GITHUB_ENV"
-
-      #- name: Set name (Windows)
-      #  if: ${{ contains(matrix.binary,'windows') == true }}
-      #  run: |
-      #    echo "THE_FILENAME=${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe >> $GITHUB_ENV"
 
       - name: Set Name
         id: BlobName
         uses: StarUbiquitous/command-output@v1.0.0
         with:
           run: |
-            CHARS=$(printf ${{ matrix.binary }}|grep "windows|wc -c")
+            CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
             if [ $CHARS -eq 0 ]; then
             	echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}" >> "$GITHUB_OUTPUT"
             else
