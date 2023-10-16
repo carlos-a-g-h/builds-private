@@ -91,10 +91,13 @@ jobs:
 
     steps:
     - name: Get date
-      uses: StarUbiquitous/command-output@v1.0.0
+      #uses: StarUbiquitous/command-output@v1.0.0
+      #id: Today
+      #with:
+      #  run: date +%Y-%m-%d-%H-%M-%S
       id: Today
-      with:
-        run: date +%Y-%m-%d-%H-%M-%S
+      run: |
+        echo "$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: Display date
       run: echo "Today is ${{ steps.today.outputs.stdout }}"
@@ -125,15 +128,13 @@ jobs:
 
       - name: Set Name
         id: BlobName
-        uses: StarUbiquitous/command-output@v1.0.0
-        with:
-          run: |
-            CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
-            if [ $CHARS -eq 0 ]; then
-            	echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}" >> "$GITHUB_OUTPUT"
-            else
-            	echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe" >> "$GITHUB_OUTPUT"
-            fi
+        run: |
+          CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
+          if [ $CHARS -eq 0 ]; then
+            echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "${{ inputs.THE_NAME }}.${{ matrix.binary }}.exe" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Download artifact (Linux)
         uses: actions/download-artifact@v3
