@@ -131,7 +131,7 @@ jobs:
           echo "${{ needs.job2.outputs.the_upload_url }}"
 
       - name: Set Name
-        id: file_naming
+        id: step_filenaming
         run: |
           tmp_var="${{ inputs.THE_NAME }}.${{ matrix.binary }}"
           CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
@@ -146,7 +146,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: "${{ matrix.binary }}"
-          path: "${{ steps.file_naming.outputs.the_asset_name }}"
+          path: "${{ steps.step_filenaming.outputs.the_asset_name }}"
 
       - name: Attach the artifact
         uses: actions/upload-release-asset@v1
@@ -155,7 +155,7 @@ jobs:
 
         with:
           upload_url: "${{ needs.job2.outputs.the_upload_url }}"
-          asset_path: "${{ steps.file_naming.outputs.the_asset_name }}"
-          asset_name: "${{ steps.file_naming.outputs.the_asset_name }}"
+          asset_path: "${{ steps.step_filenaming.outputs.the_asset_name }}"
+          asset_name: "${{ steps.step_filenaming.outputs.the_asset_name }}"
           asset_content_type: application/octet-stream
 
