@@ -87,7 +87,7 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      the_upload_url: ${{ steps.CreateRelease.outputs.upload_url }}
+      the_upload_url: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
     - name: Get date
@@ -99,7 +99,7 @@ jobs:
       run: echo "Today is {{ steps.tag_naming.outputs.the_tag_name }}"
 
     - name: Create release
-      id: CreateRelease
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
