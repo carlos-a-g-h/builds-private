@@ -102,6 +102,9 @@ jobs:
       id: step_release
       uses: softprops/action-gh-release@v1
       with:
+        draft: false
+        prerelease: false
+        name: "${{ steps.step_date.outputs.the_tag_name }}"
         tag_name: "${{ steps.step_date.outputs.the_tag_name }}"
         token: "${{ secrets.GH_TOKEN }}"
 
