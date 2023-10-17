@@ -132,7 +132,8 @@ jobs:
     steps:
       - name: (Debug) Show upload URL
         run: |
-          echo "${{ needs.job2.outputs.the_upload_url }}"
+          echo "from last job: ${{ needs.job2.outputs.the_upload_url }}"
+          echo "from event: ${{ github.event.release.upload_url }}"
 
       - name: Set Name
         id: step_filenaming
