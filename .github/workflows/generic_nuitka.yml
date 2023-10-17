@@ -96,7 +96,7 @@ jobs:
         echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: Display date
-      run: echo "Today is {{ steps.tag_naming.outputs.the_tag_name }}"
+      run: echo "Today is ${{ steps.tag_naming.outputs.the_tag_name }}"
 
     - name: Create release
       id: create_release
