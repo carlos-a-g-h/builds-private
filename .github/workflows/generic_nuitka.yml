@@ -154,7 +154,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: "${{ matrix.binary }}"
-          path: "${{ steps.step_filenaming.outputs.the_asset_name }}"
+          path: "./the-asset/"
+
+      - name: (Debug) Check dir
+        run: ls -l the-asset
 
       - name: Attach the artifact
         uses: actions/upload-release-asset@v1
@@ -163,7 +166,7 @@ jobs:
 
         with:
           upload_url: ${{ needs.job2.outputs.the_upload_url }}
-          asset_path: "${{ steps.step_filenaming.outputs.the_asset_name }}"
+          asset_path: "./the-asset/${{ steps.step_filenaming.outputs.the_asset_name }}"
           asset_name: "${{ steps.step_filenaming.outputs.the_asset_name }}"
           asset_content_type: application/octet-stream
 
