@@ -87,7 +87,7 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      the_upload_url: ${{ steps.create_release.outputs.upload_url }}
+      the_upload_url: "${{ steps.create_release.outputs.upload_url }}"
 
     steps:
     - name: Get date
@@ -95,7 +95,7 @@ jobs:
       run: |
         echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
-    - name: Display date
+    - name: (Debug) Show date
       run: echo "Today is ${{ steps.tag_naming.outputs.the_tag_name }}"
 
     - name: Create release
@@ -121,6 +121,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: (Debug) Show upload URL
+        run: |
+          echo "${{ needs.job2.outputs.the_upload_url }}"
 
       - name: Set Name
         id: file_naming
@@ -131,6 +134,7 @@ jobs:
           then
             tmp_var="$tmp_var".exe
           fi
+          echo "file name is: $tmp_var"
           echo "the_asset_name=$tmp_var" >> "$GITHUB_OUTPUT"
 
       - name: Download artifact (Linux)
