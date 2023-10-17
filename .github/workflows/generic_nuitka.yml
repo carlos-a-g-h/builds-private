@@ -96,7 +96,7 @@ jobs:
         echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: (Debug) Show date
-      run: echo "Today is ${{ steps.step_date.outputs.the_tag_name }}"
+      run: echo "${{ steps.step_date.outputs.the_tag_name }}"
 
     - name: Create release
       id: step_release
@@ -113,6 +113,10 @@ jobs:
       #  release_name: "${{ steps.tag_naming.outputs.the_tag_name }}"
       #  draft: false
       #  prerelease: false
+
+    - name: (Debug) Show Upload URL
+      run: |
+        echo ${{ steps.step_release.outputs.upload_url }}
 
   job3:
     name: Attach artifact as an asset
@@ -142,7 +146,7 @@ jobs:
           echo "file name is: $tmp_var"
           echo "the_asset_name=$tmp_var" >> "$GITHUB_OUTPUT"
 
-      - name: Download artifact (Linux)
+      - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: "${{ matrix.binary }}"
