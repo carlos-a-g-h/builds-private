@@ -87,22 +87,22 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      the_upload_url: "${{ steps.create_release.outputs.upload_url }}"
+      the_upload_url: "${{ steps.step_release.outputs.upload_url }}"
 
     steps:
     - name: Get date
-      id: tag_naming
+      id: step_date
       run: |
         echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: (Debug) Show date
-      run: echo "Today is ${{ steps.tag_naming.outputs.the_tag_name }}"
+      run: echo "Today is ${{ steps.step_date.outputs.the_tag_name }}"
 
     - name: Create release
-      id: create_release
+      id: step_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: "${{ steps.tag_naming.outputs.the_tag_name }}"
+        tag_name: "${{ steps.step_date.outputs.the_tag_name }}"
         token: "${{ secrets.GH_TOKEN }}"
 
       #uses: actions/create-release@v1
