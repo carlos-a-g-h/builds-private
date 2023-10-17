@@ -96,7 +96,7 @@ jobs:
         echo "the_tag_name=$(date +%Y-%m-%d-%H-%M-%S)" >> "$GITHUB_OUTPUT"
 
     - name: Display date
-      run: echo "Today is ${{ steps.today.outputs.stdout }}"
+      run: echo "Today is {{ steps.tag_naming.outputs.the_tag_name }}"
 
     - name: Create release
       id: CreateRelease
@@ -104,7 +104,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: "${{ steps.Today.outputs.stdout }}"
+        tag_name: "${{ steps.tag_naming.outputs.the_tag_name }}"
         release_name: "${{ steps.tag_naming.outputs.the_tag_name }}"
         draft: false
         prerelease: false
@@ -136,8 +136,8 @@ jobs:
       - name: Download artifact (Linux)
         uses: actions/download-artifact@v3
         with:
-          name: ${{ matrix.binary }}
-          path: ${{ steps.file_naming.outputs.asset_name_var }}
+          name: "${{ matrix.binary }}"
+          path: "${{ steps.file_naming.outputs.the_asset_name }}"
 
       - name: Attach the artifact
         uses: actions/upload-release-asset@v1
@@ -145,8 +145,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
         with:
-          upload_url: ${{ needs.job2.outputs.the_upload_url }}
-          asset_path: "${{ steps. }}"
-          asset_name: "$THE_FILENAME"
+          upload_url: "${{ needs.job2.outputs.the_upload_url }}"
+          asset_path: "${{ steps.file_naming.outputs.the_asset_name }}"
+          asset_name: "${{ steps.file_naming.outputs.the_asset_name }}"
           asset_content_type: application/octet-stream
 
