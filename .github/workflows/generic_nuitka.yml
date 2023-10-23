@@ -20,6 +20,10 @@ on:
         required: true
         default: false
 
+concurrency:
+  group: "${{ github.workflow }} - ${{ inputs.THE_NAME }}"
+  cancel-in-progress: false
+
 jobs:
   job1:
     name: Build and upload executable binary
