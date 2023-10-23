@@ -25,7 +25,7 @@ jobs:
     name: Build and upload executable binary
     strategy:
       matrix:
-        os: [ubuntu-20.04,windows-2019 ]
+        os: [ubuntu-20.04,windows-2019]
 
     runs-on: ${{ matrix.os }}
     steps:
