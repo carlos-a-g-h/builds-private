@@ -141,12 +141,7 @@ jobs:
       - name: Set Name
         id: step_filenaming
         run: |
-          tmp_var="${{ inputs.THE_NAME }}.${{ matrix.binary }}"
-          CHARS=$(printf ${{ matrix.binary }}|(grep "windows" || true)|wc -c)
-          if [ $CHARS -gt 0 ]
-          then
-            tmp_var="$tmp_var".exe
-          fi
+          tmp_var="$(ls the-asset|grep ${{ inputs.THE_NAME }})"
           echo "file name is: $tmp_var"
           echo "the_asset_name=$tmp_var" >> "$GITHUB_OUTPUT"
 
