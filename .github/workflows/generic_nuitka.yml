@@ -83,7 +83,7 @@ jobs:
           name: "${{ matrix.os }}"
           if-no-files-found: error
           path: |
-            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.bin
+            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.linux
             ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.exe
 
   job2:
