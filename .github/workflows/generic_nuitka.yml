@@ -67,7 +67,7 @@ jobs:
         working-directory: source-code
         run: |
           python -m nuitka --onefile --onefile-no-compression --assume-yes-for-downloads "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}"
-          mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.bin"
+          mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.${{ runner.arch }}.bin"
           find the-output
 
       - name: Build for Windows
@@ -75,7 +75,7 @@ jobs:
         working-directory: source-code
         run: |
           python -m nuitka --onefile --onefile-no-compression --assume-yes-for-downloads "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}.exe"
-          mv "the-output/${{ inputs.THE_NAME }}.exe" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.exe"
+          mv "the-output/${{ inputs.THE_NAME }}.exe" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.${{ runner.arch }}.exe"
           ls
 
       - uses: actions/upload-artifact@v3
@@ -83,8 +83,8 @@ jobs:
           name: "${{ matrix.os }}"
           if-no-files-found: error
           path: |
-            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.bin
-            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.exe
+            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.${{ runner.arch }}.bin
+            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.${{ runner.arch }}.exe
 
   job2:
     name: Create the release
