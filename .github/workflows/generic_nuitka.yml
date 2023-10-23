@@ -67,7 +67,7 @@ jobs:
         working-directory: source-code
         run: |
           python -m nuitka --onefile --onefile-no-compression --assume-yes-for-downloads "${{ inputs.MAIN_PY }}" --output-dir="the-output" --output-filename="${{ inputs.THE_NAME }}"
-          mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}"
+          mv "the-output/${{ inputs.THE_NAME }}" "the-output/${{ inputs.THE_NAME }}.${{ matrix.os }}.bin"
           find the-output
 
       - name: Build for Windows
@@ -83,7 +83,7 @@ jobs:
           name: "${{ matrix.os }}"
           if-no-files-found: error
           path: |
-            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.linux
+            ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.bin
             ./source-code/the-output/${{ inputs.THE_NAME }}.${{ runner.arch }}.${{ matrix.os }}.exe
 
   job2:
