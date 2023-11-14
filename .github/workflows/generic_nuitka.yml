@@ -8,6 +8,11 @@ on:
         type: string
         required: true
 
+      NOTES:
+        description: Release notes
+        type: string
+        required: true
+
       MAIN_PY:
         description: Python main filename
         type: string
