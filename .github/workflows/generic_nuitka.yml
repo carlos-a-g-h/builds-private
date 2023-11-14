@@ -8,16 +8,16 @@ on:
         type: string
         required: true
 
-      NOTES:
-        description: Release notes
-        type: string
-        required: true
-
       MAIN_PY:
         description: Python main filename
         type: string
         required: true
         default: main.py
+
+      NOTES:
+        description: Release notes
+        type: string
+        required: true
 
       NO_WINDOWS:
         description: Do not build for Windows, just Linux
