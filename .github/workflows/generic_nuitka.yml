@@ -15,7 +15,7 @@ on:
         default: main.py
 
       COMMENTARY:
-        description: Release notes
+        description: Commentary
         type: string
         required: true
 
