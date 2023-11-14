@@ -1,3 +1,3 @@
 # Private builds
 
-Releases of binary blobs and executables from private code
+Releases of binary blobs and executables from personal and/or private code
