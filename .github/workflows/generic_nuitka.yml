@@ -14,7 +14,7 @@ on:
         required: true
         default: main.py
 
-      NOTES:
+      COMMENTARY:
         description: Release notes
         type: string
         required: true
@@ -112,6 +112,7 @@ jobs:
       id: step_release
       uses: softprops/action-gh-release@v1
       with:
+        body: "${{ inputs.COMMENTARY }}"
         draft: false
         prerelease: false
         name: "${{ steps.step_date.outputs.the_tag_name }}"
